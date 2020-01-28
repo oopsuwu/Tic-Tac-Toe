@@ -3,15 +3,14 @@ import java.util.Scanner;
 
 public class TicTacToe {
     public static void main(String[] args) {
-
         int turn = 0;
-
         char[][] gameBoard = {{' ', '|', ' ', '|', ' '}, {'-', '+', '-', '+', '-'}
                                 ,{' ', '|', ' ', '|', ' '}, {'-', '+', '-', '+', '-'}
-                                    ,{' ', '|', ' ', '|', ' '}};
-                                    
+                                    ,{' ', '|', ' ', '|', ' '}};    
+
         printGameBoard(gameBoard);   
-        
+
+        //loops until someone wins or no more spots left
         while (turn < 9) {
             playGame(gameBoard, turn);
             ++turn;
@@ -20,10 +19,15 @@ public class TicTacToe {
             if (turn > 4) {
                 checkWinCondition(gameBoard);
                 checkLoseCondition(gameBoard);
+            }//if
+            else {
+                System.out.println("Draw.");
+                System.exit(0);
             }
         }//while
     }//main
 
+    //prints the game board into the output
     public static void printGameBoard(char[][] gameBoard) {
         for (char[] row : gameBoard) {
             for (char c : row) {
@@ -33,6 +37,7 @@ public class TicTacToe {
         }//for                 
     }//printGameBoard
 
+    //this is probably a bad name for a method, but it's basically the whole game
     public static void playGame(char[][] gameBoard, int turn) {
         int pos = 0;
         char symbol = '\0';
@@ -40,6 +45,7 @@ public class TicTacToe {
         Scanner sc = new Scanner(System.in);
         Random rand = new Random();
 
+        //player starts first, player and cpu take turns
         if (turn % 2 == 0){
             System.out.println("Enter Position (1-9):");
             System.out.print(">> ");
@@ -51,6 +57,7 @@ public class TicTacToe {
             pos = rand.nextInt(9) + 1;
         }//else
 
+        //checks to see if the spot was taken
         if (isFilled(gameBoard, pos) == true) {
             if (turn % 2 == 0) {
             System.out.println("Try again.");
@@ -58,9 +65,11 @@ public class TicTacToe {
             System.out.println();
             }
             pos = 0; //kept saving old value until i set var pos to 0 to reset it's old value
+                        //it would override previous spots that were already taken which was annoying
             playGame(gameBoard, turn);
         }//if isFilled()
 
+        //places the pieces of either 'X', or 'O'
         switch(pos) {
             case 1:
                 gameBoard[0][0] = symbol;
@@ -97,6 +106,7 @@ public class TicTacToe {
         }//switch
     }//playGame
 
+    //if the spot has either an 'X' or an 'O', user or cpu will not be able to play that spot
     public static boolean isFilled(char[][] gameBoard, int pos) {
         switch(pos) {
             case 1:
@@ -148,6 +158,7 @@ public class TicTacToe {
         return false;
     }//isFilled
 
+    //checks if three in a row was made for player
     public static void checkWinCondition(char[][] gameBoard) {
         boolean win = false;
         if (gameBoard[0][0] == 'X' && gameBoard[0][2] == 'X' && gameBoard[0][4] == 'X') {
@@ -180,6 +191,7 @@ public class TicTacToe {
         }//if win
     }//checkWinCondition
 
+    //checks if three in a row was made for cpu
     public static void checkLoseCondition(char[][] gameBoard) {
         boolean lose = false;
         if (gameBoard[0][0] == 'O' && gameBoard[0][2] == 'O' && gameBoard[0][4] == 'O') {
@@ -202,10 +214,10 @@ public class TicTacToe {
         }//3rd column
         if (gameBoard[0][0] == 'O' && gameBoard[2][2] == 'O' && gameBoard[4][4] == 'O') {
             lose = true;
-        }//-diagonal
+        }//top left - bottom right diagonal
         if (gameBoard[0][4] == 'O' && gameBoard[2][2] == 'O' && gameBoard[4][0] == 'O') {
             lose = true;
-        }//diagonal
+        }//bottom left - top right diagonal
         if (lose == true) {
             System.out.println("You lose...");
             System.exit(0);
